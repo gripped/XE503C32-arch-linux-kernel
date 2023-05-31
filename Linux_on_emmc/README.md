@@ -3,9 +3,10 @@ You don't want to do this unless you have set developer mode and usb boot at the
 Otherwise at some point
  - The chromebook will run out battery power (It's never fully turned off while the battery has some power)
  - The software flags for dev-mode and usb boot will revert to default
- - The only way to re-enable (AFAICT) dev-mode and usb boot is via chromeos which you've deleted so you'd have to use a recovery USB to reinstall chromeos which wipes everything you had on the emmc
+ - The only way to re-enable (AFAICT) dev-mode and usb boot is via chromeos which you've deleted so you'd have to use a recovery USB to reinstall chromeos which wipes everything you had installed on the emmc
 
-Everything on the emmc can be deleted.  
+### Install
+Nothing chromeos related is needed on the emmc so it can all be deleted.  
 The following is not a full guide but shows one way to do it assuming you already have a working install on the usb drive your doing it from, and are using my kernel packages. Otherwise adapt as required.
 
 Check device names (they can change)

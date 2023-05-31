@@ -2,7 +2,7 @@
 ### background
 It's no secret that the rootfs from [Alarm](https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook-2) doesn't work with the Samsung Chromebook 2.  
 Well it's a bit of a secret as they've kept pumping out new rootfs's ever since the included kernels stopped working sometime between kernel 5.10 and 5.11 and the instructions on the above link make no mention of the non working kernel ? So semi secret.  
-Likely they don't realise as the [forum thread](https://archlinuxarm.org/forum/viewtopic.php?f=47&t=15169) about the non working kernels is only 5 pages long and easily missed ?   
+It's likely they haven't realised yet as the [forum thread](https://archlinuxarm.org/forum/viewtopic.php?f=47&t=15169) about the non working kernels is only 5 pages long and easily missed ?   
 
 It seems that whereas before the kernel would load when it had been compiled with multiple dtb's (devicetrees) it now refuses to do so.  
 A solution is to compile the kernel with only the peach pi specific dtb  
