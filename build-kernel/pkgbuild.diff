@@ -1,0 +1,132 @@
+diff -Naur a/linux-armv7-chromebook.install b/linux-armv7-chromebook.install
+--- a/linux-armv7-chromebook.install	2023-05-26 20:05:19.792000573 +0100
++++ b/linux-armv7-chromebook.install	2023-05-26 20:05:55.184000577 +0100
+@@ -1,19 +1,25 @@
+ flash_kernel() {
+-  major=$(mountpoint -d / | cut -f 1 -d ':')
+-  minor=$(mountpoint -d / | cut -f 2 -d ':')
+-  device=$(cat /proc/partitions | awk {'if ($1 == "'${major}'" && $2 == "'${minor}'") print $4 '})
+-  device="/dev/${device/%2/1}"
++  
++echo "Three kernel partitions hve been installed into /boot"
++echo "vmlinux.kpart, vmlinux.emmc_root.kpart & vmlinux.usb_root.kpart"
++echo ""
++echo "vmlinux.kpart has the kernel command line"
++echo -e "\033[1mconsole=tty0 init=/sbin/init root=PARTUUID=%U/PARTNROFF=1 rootwait rw noinitrd\033[0m"
++echo "This will use as 'root' the sequentially next partion from the kernel partition"
++echo ""
++echo "vmlinux.emmc_root.kpart hasthe kernel command line"
++echo -e "\033[1mconsole=tty0 init=/sbin/init root=PARTLABEL=emmc_root rootwait rw noinitrd\033[0m"
++echo "This will use as 'root' the partition with the PARTLABEL emmc_root"
++echo "PARTLABEL emmc_root can actually be anywhere but there must be only one partition labeled emmc_root"
++echo ""
++echo "vmlinux.usb_root.kpart has the kernel command line"
++echo -e "\033[1mconsole=tty0 init=/sbin/init root=PARTLABEL=usb_root rootwait rw noinitrd\033[0m"
++echo "This will use as 'root' the partition with the PARTLABEL usb_root"
++echo "PARTLABEL usb_root can actually be anywhere but there must be only one partition labeled usb_root"
++echo ""
++echo "Use dd to flash the kpart to the the kernel partition"
++echo -e "For example:\n\033[1mdd if=/boot/vmlinux.kpart of=/dev/sdX\033[0m"
+ 
+-  echo "A new kernel version needs to be flashed onto ${device}."
+-  echo "Do you want to do this now? [y|N]"
+-  read -r shouldwe
+-  if [[ $shouldwe =~ ^([yY][eE][sS]|[yY])$ ]]; then
+-    dd if=/boot/vmlinux.kpart of=${device}
+-    sync
+-  else
+-    echo "You can do this later by running:"
+-    echo "# dd if=/boot/vmlinux.kpart of=${device}"
+-  fi
+ }
+ 
+ post_install () {
+diff -Naur a/PKGBUILD b/PKGBUILD
+--- a/PKGBUILD	2023-05-26 20:05:19.788000573 +0100
++++ b/PKGBUILD	2023-05-26 20:08:26.944000595 +0100
+@@ -105,7 +105,16 @@
+   #yes "" | make config
+ 
+   # build!
+-  make ${MAKEFLAGS} zImage modules dtbs
++  
++  if [ -f "../../../localmodconfig" ]; then
++    make LSMOD="../../../localmodconfig" localmodconfig
++  fi
++  
++  if [ -f "../../../localyesconfig" ]; then
++    make LSMOD="../../../localyesconfig" localyesconfig
++  fi
++  
++  make ${MAKEFLAGS} -j4 zImage modules exynos5800-peach-pi.dtb
+ }
+ 
+ _package() {
+@@ -129,7 +138,7 @@
+ 
+   mkdir -p "${pkgdir}"/{boot,usr/lib/modules}
+   make INSTALL_MOD_PATH="${pkgdir}/usr" modules_install
+-  make INSTALL_DTBS_PATH="${pkgdir}/boot/dtbs" dtbs_install
++  install -D arch/$KARCH/boot/dts/exynos5800-peach-pi.dtb -m755 "${pkgdir}/boot/dtbs/exynos5800-peach-pi.dtb"
+   cp arch/$KARCH/boot/zImage "${pkgdir}/boot/zImage"
+ 
+   # make room for external modules
+@@ -239,7 +248,7 @@
+ 
+   cd "${srcdir}/${_srcname}"
+ 
+-  cp ../kernel.its .
++  cp ../../../kernel.its .
+   mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg
+   dd if=/dev/zero of=bootloader.bin bs=512 count=1
+   echo 'console=tty0 init=/sbin/init root=PARTUUID=%U/PARTNROFF=1 rootwait rw noinitrd' > cmdline
+@@ -252,24 +261,37 @@
+     --signprivate ../kernel_data_key.vbprivk \
+     --config cmdline \
+     --bootloader bootloader.bin
++  
++  echo 'console=tty0 init=/sbin/init root=PARTLABEL=emmc_root rootwait rw noinitrd' > cmdline
++  vbutil_kernel \
++    --pack vmlinux.emmc_root.kpart \
++    --version 1 \
++    --vmlinuz vmlinux.uimg \
++    --arch arm \
++    --keyblock ../kernel.keyblock \
++    --signprivate ../kernel_data_key.vbprivk \
++    --config cmdline \
++    --bootloader bootloader.bin
++  
++  echo 'console=tty0 init=/sbin/init root=PARTLABEL=usb_root rootwait rw noinitrd' > cmdline
++  vbutil_kernel \
++    --pack vmlinux.usb_root.kpart \
++    --version 1 \
++    --vmlinuz vmlinux.uimg \
++    --arch arm \
++    --keyblock ../kernel.keyblock \
++    --signprivate ../kernel_data_key.vbprivk \
++    --config cmdline \
++    --bootloader bootloader.bin
+ 
+   mkdir -p "${pkgdir}/boot"
+   cp vmlinux.kpart "${pkgdir}/boot"
++  cp vmlinux.emmc_root.kpart "${pkgdir}/boot"
++  cp vmlinux.usb_root.kpart "${pkgdir}/boot"
+ }
+ 
+-_package-odroidc1() {
+-  pkgdesc="The Linux Kernel - ${_desc} - ODROID-C1"
+-  depends=('linux-armv7')
+-  provides=('linux-armv7-uimage')
+-  conflicts=('linux-armv7-uimage' 'linux-armv7-rc-uimage')
+-
+-  cd "${srcdir}/${_srcname}"
+-
+-  mkdir -p "${pkgdir}/boot"
+-  mkimage -A arm -O linux -T kernel -C none -a 0x00208000 -e 0x00208000 -n "${pkgname}" -d arch/$KARCH/boot/zImage "${pkgdir}/boot/uImage"
+-}
+ 
+-pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-chromebook" "${pkgbase}-odroidc1")
++pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-chromebook")
+ for _p in ${pkgname[@]}; do
+   eval "package_${_p}() {
+     _package${_p#${pkgbase}}

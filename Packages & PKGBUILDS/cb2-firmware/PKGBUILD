@@ -1,0 +1,23 @@
+# Maintainer: Thomas Bächler <thomas@archlinux.org>
+
+pkgname=(cb2-firmware)
+pkgver=1
+pkgrel=1
+pkgdesc="Firmware files for XE503C32"
+url="https://github.com/gripped/XE503C32-arch-linux-kernel/"
+license=('GPL2' 'GPL3' 'custom')
+arch=('any')
+makedepends=('git')
+options=(!strip)
+conflicts=('linux-firmware')
+provides=('linux-firmware')
+source=("https://github.com/gripped/XE503C32-arch-linux-kernel/blob/main/PKGBUILDS/cb2-firmware/XE503C32-firmware.tar.gz")
+sha256sums=('266200b788d9abb1f51fe7f41643a33db61b54e49fb372a96c7220779c87a7d0')
+
+package() {
+
+  mkdir -p ${pkgdir}/usr/lib
+  cp -r ${srcdir}/firmware ${pkgdir}/usr/lib
+}
+
+

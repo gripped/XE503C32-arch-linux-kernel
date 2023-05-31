@@ -1,0 +1,35 @@
+#!/bin/bash
+git clone https://github.com/archlinuxarm/PKGBUILDs.git
+if [ ! -f ".vboot" ]; then
+    echo -e "\nThis will probably fail unless vboot-utils has been manually rebuilt recently.\n"
+    read -p "Rebuild and install it now ? (y/n) " choice
+    if [[ $choice =~ ^[Yy]$ ]]; then
+        cd PKGBUILDs/alarm/vboot-utils
+        makepkg -si
+        touch .vboot
+        cd -
+    else
+        touch .vboot
+    fi
+fi
+if [ $# -gt 0 ]; then
+  cd PKGBUILDs
+  git checkout $1
+  cd -
+fi
+cp -al PKGBUILDs/core/linux-armv7 .
+rm -r PKGBUILDs &
+cd linux-armv7
+patch < ../pkgbuild.diff
+sed -i 's/git apply --whitespace=nowarn/patch -p1 </g' PKGBUILD   #Alarm PKGBUILD silently fails to patch anything at all !?
+sed -i 's/git apply/patch -p1 </g' PKGBUILD
+makepkg -s
+read -p "Install the packages ? (y/n) " choice
+if [[ $choice =~ ^[Yy]$ ]]; then
+    sudo pacman -U *.zst
+fi
+cd -
+
+
+
+
