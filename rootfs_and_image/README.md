@@ -14,7 +14,7 @@ The rootfs is the latest from Alarm at the point of writing with the following c
  - Swapped the broken kernel for [this one 6.3.5-1 ](https://github.com/gripped/XE503C32-arch-kernel-packages/tree/main/6.3.5-1/local_modules) with a reduced set of modules. There is a [version](https://github.com/gripped/XE503C32-arch-kernel-packages/tree/main/6.3.5-1/all_modules) with all modules if you want them
  - Swapped linux-firmware with [cb2-firmware](https://github.com/gripped/XE503C32-arch-linux-kernel/tree/main/Packages%20&%20PKGBUILDS/cb2-firmware) which is the firmware extracted from a Peach Pi ChromeOs install. Just install linux-firmware again if you want the full set (see below)
  - Installed a rebuilt vboot-utils package as the one in the Alarm repo doesn't work atm (library mismatch)
- - Added `IgnorePkg = linux-armv7 linux-armv7-chromebook linux-firmware linux-armv7-headers` to /etc/pacman.conf as there's no point updating with broken kernels. If you want to upgrade the kernel you'll need to build your own kernel packages, or get them from here if I ever make any, and install with `pacman -U`   
+ - Added `IgnorePkg = linux-armv7 linux-armv7-chromebook linux-firmware linux-armv7-headers` to /etc/pacman.conf as there's no point upgrading to broken kernels. If you want to upgrade the kernel you'll need to build your own kernel packages, or get them from here if I ever make any, and install with `pacman -U`   
 (putting linux-firmware in there was mistake, but I'm not redoing the image for that. Remove it if you need to.) 
 ### rootsfs
 Follow the instructions [here](https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook-2).  
