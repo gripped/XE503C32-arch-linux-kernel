@@ -4,8 +4,8 @@ Using u-boot allows us to boot the the kernel in a more traditional way.
 The advantages of which are:  
  - Easier modification of the kernel command line
  - A menu to be able to easily select different kernels and/or rootfs's
- - The use of an initramfs if one is wanted (required for a usb rootfs atm)
-There's a Arch package [here](https://github.com/gripped/XE503C32-arch-kernel-packages/raw/main/other/u-boot-peach-pi/u-boot-peach-pi-2019.01-1-armv7h.pkg.tar.xz)
+ - The use of an initramfs if one is wanted (required for a usb rootfs atm)  
+There's a Arch package [here](https://github.com/gripped/XE503C32-arch-kernel-packages/raw/main/other/u-boot-peach-pi/u-boot-peach-pi-2019.01-1-armv7h.pkg.tar.xz).  
 If you want to build it yourself the build files are [here](https://github.com/gripped/XE503C32-arch-kernel-packages/tree/main/other/u-boot-peach-pi)
 ### Usage
  - It should go without saying but make sure you make a copy of the current kernel partition so you can revert if the below goes wrong
