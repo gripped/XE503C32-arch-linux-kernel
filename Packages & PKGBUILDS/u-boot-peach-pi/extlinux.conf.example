@@ -1,0 +1,39 @@
+
+TIMEOUT 30
+
+DEFAULT linux-peach-pi-emmc-noinitramfs
+
+MENU TITLE Peach Pi Chromebook2 boot options
+
+# peach pi chromebook emmc PARTLABEL
+LABEL linux-peach-pi-emmc-initramfs
+      MENU LABEL linux on peach pi emmc root initramfs
+      LINUX ../zImage
+      INITRD ../initramfs-linux.img
+      FDT ../dtbs/exynos5800-peach-pi.dtb
+      APPEND console=tty1 root=PARTLABEL=emmc_root ro rootwait net.ifnames=0 ipv6.disable=1 mem=3584M
+      
+      
+# peach pi chromebook emmc noinitramfs PARTLABEL
+LABEL linux-peach-pi-emmc-noinitramfs
+      MENU LABEL linux on peach pi emmc_root noinitramfs
+      LINUX ../zImage
+      FDT ../dtbs/exynos5800-peach-pi.dtb
+      APPEND console=tty1 root=PARTLABEL=emmc_root rw rootwait net.ifnames=0 mem=3584M noresume noinitrd
+
+
+# peach pi chromebook usb UUID
+LABEL linux-peach-pi-usb_uuid
+      MENU LABEL linux on peach pi usb_uuid
+      LINUX ../zImage
+      INITRD ../initramfs-linux.img
+      FDT ../dtbs/exynos5800-peach-pi.dtb
+      APPEND console=tty1 root=UUID=dcbf2dee-4f84-4874-8450-980df2909b42 ro rootwait net.ifnames=0
+
+
+# peach pi chromebook sdcard device name (the worst way)
+LABEL linux-peach-pi-sdcard-devname
+      MENU LABEL linux on peach pi sdcard device name
+      LINUX ../zImage
+      FDT ../dtbs/exynos5800-peach-pi.dtb
+      APPEND console=tty1 root=/dev/mmcblk1p2 ro rootwait net.ifnames=0 ipv6.disable=1 fsck.repair=yes mem=3584M noresume

@@ -1,0 +1,24 @@
+post_install() {
+  post_upgrade
+}
+
+post_upgrade() {
+  bon='\033[1m'
+  boff='\033[0m'
+  echo -e "\n\n${bon}Required:${boff}\n\nFlash /boot/u-boot-peach-pi.kpart to the kernel partion with dd.
+  
+Copy ${bon}/boot/extlinux/extlinux.conf.example${boff} to ${bon}/boot/extlinux/extlinux.conf${boff} and edit to suit.
+
+${bon}/boot/extlinux/extlinux.conf${boff} must be on a FAT32 or ext* filesystem. (A seperate /boot partition could be used)
+
+The partition containing /boot/extlinux/extlinux.conf needs the ${bon}'Legacy boot flag'${boff} set.
+${bon}cgpt add -i X -B 1 /dev/mmcblkZ${boff}
+or
+${bon}cgpt add -i X -B 1 /dev/sdZ${boff}
+
+Where ${bon}X${boff} is the partition nunber shown by ${bon}cgpt show /dev/mmcblkZ${boff} and ${bon}Z${boff} is the number of the block device
+
+Using a rootfs on an emmc or sdcard does not require any initramfs. Using a rootfs on a usb does seem to need some modules, so an initramfs, unless you build them into the kernel.
+
+If you accidently stop u-boot's autoboot ${bon}bootd${boff} starts the menu again"
+}

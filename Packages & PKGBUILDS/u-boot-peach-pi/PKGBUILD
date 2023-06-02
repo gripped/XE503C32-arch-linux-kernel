@@ -1,0 +1,51 @@
+# U-Boot: ODROID XU3/XU4/HC1
+# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
+
+buildarch=4
+
+pkgname=u-boot-peach-pi
+pkgver=2019.01
+pkgrel=1
+pkgdesc="U-Boot for Samsung peach-pi"
+arch=('armv7h')
+url='http://www.denx.de/wiki/U-Boot/WebHome'
+license=('GPL')
+install=$pkgname.install
+makedepends=('bc' 'dtc' 'git')
+source=("u-boot::git+https://github.com/u-boot/u-boot.git"
+        "kernel.keyblock"
+        "kernel_data_key.vbprivk"
+        "extlinux.conf.example"
+        "config")
+md5sums=('SKIP'
+         '61c5ff73c136ed07a7aadbf58db3d96a'
+         '584777ae88bce2c5659960151b64c7d8'
+         'c67529ddd45ae9a43c307c3b3bc1d4a8'
+         '4cb54f46a733c14a8c46a5d1ea3fdfaf')
+
+build() {
+  cd u-boot
+  git checkout v${pkgver}
+  unset CFLAGS CXXFLAGS CPPFLAGS
+  
+  make distclean
+  cp ../config .config
+  #make peach-pi_defconfig
+  #msg "Stopping build"
+  #return 1
+  make
+}
+
+package() {
+  cd u-boot
+
+  mkdir -p "${pkgdir}"/boot/extlinux
+
+  echo "Dummy" > dummy
+  tools/mkimage -A arm -O linux -T kernel -C none -n "U-Boot boot script" -e 0x23E00000 -a 0x23E00000 -d u-boot-dtb.bin u-boot-img-peach-pi
+  vbutil_kernel --pack u-boot-peach-pi.kpart --keyblock ../kernel.keyblock --signprivate ../kernel_data_key.vbprivk --version 1 --arch arm --config dummy --bootloader dummy --vmlinuz u-boot-img-peach-pi
+  
+#  tools/mkimage -A arm -O linux -T script -C none -n "U-Boot boot script" -d ../boot.txt "${pkgdir}"/boot/boot.scr
+  cp u-boot-peach-pi.kpart "${pkgdir}"/boot
+  cp ../extlinux.conf.example "${pkgdir}"/boot/extlinux
+}
