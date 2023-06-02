@@ -16,7 +16,7 @@ If you want to build it yourself the build files are [here](https://github.com/g
   `cgpt add -i X -B 1 /dev/sdZ`.   
   Where X is the partition nunber shown by cgpt show /dev/mmcblkZ and Z is the number of     the block device
  - Using a rootfs on an emmc or sdcard does not require an initramfs. Using a rootfs on a usb does seem to need some modules, so an initramfs, unless you build them into the kernel.
- - If you accidently stop u-boot's autoboot `bootd` starts the menu again
+ - If you accidently stop u-boot's autoboot `bootd` starts the menu again.
 ### Other
  - Newer versions do seem to work for autoboot but have issues in the
    u-boot console.
