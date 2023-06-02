@@ -29,10 +29,18 @@ sed -i 's/#return 1/return 1/g' PKGBUILD
 sed -i 's/make prepare/#make prepare/g' PKGBUILD.distcc
 sed -i 's/-j4 zImage/zImage/g' PKGBUILD.distcc
 makepkg -s
+GOV=$(< /sys/devices/system/cpu/cpufreq/policy4/scaling_governor)
+echo powersave > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor    #Overheating at default settings. Can't turn off the a7 cores but we can slow them down.
 DISTCC_HOSTS="localhost,cpp,lzo" pump makepkg --config /etc/makepkg.pump.conf -p PKGBUILD.distcc -se --noprepare
-read -p "Install the packages ? (y/n) " choice
-if [[ $choice =~ ^[Yy]$ ]]; then
-    sudo pacman -U *.zst
+FAIL=$?
+echo $GOV > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+if [[ $FAIL -eq 0 ]]; then
+  read -p "Install the packages ? (y/n) " choice
+  if [[ $choice =~ ^[Yy]$ ]]; then
+      sudo pacman -U *.zst
+  fi
+else
+  echo "Build failed with exit code $FAIL."
 fi
 cd -
 
