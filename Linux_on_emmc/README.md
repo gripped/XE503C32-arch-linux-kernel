@@ -25,7 +25,7 @@ My maths must have been out as I ended up with about 1.6M free at the end of the
 mkfs.ext4 /dev/mmcblk0p3
 mkdir /tmp/emmc
 mount PARTLABEL=emmc_root /tmp/emmc
-rsync -avxXAHU --exclude=dev/* --exclude=sys/*  --exclude=proc/* --exclude=run/* --exclude=lost+found --delete / /tmp/emmc
+rsync -avxXAHU --exclude=/dev/* --exclude=/sys/*  --exclude=/proc/* --exclude=/run/* --exclude=/lost+found --delete / /tmp/emmc
 cd /boot/
 dd if=vmlinux.emmc_root.kpart of=/dev/mmcblk0p1
 umount /tmp/emmc
