@@ -1,4 +1,4 @@
-The usefulness of this repo is somewhat lessened due to the Arch Arm armv7 repo being a broken mix of old and new packages.  
+The usefulness of this repo is somewhat lessened due to the Arch Arm armv7 repo being a broken mix of old and new packages now.  
 
 I've switched to Devuan on my Chromebook.  
 But if I release any new kernels they will likely still be Arch packages.  
