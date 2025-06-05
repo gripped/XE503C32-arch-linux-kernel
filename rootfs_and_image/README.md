@@ -11,15 +11,7 @@ I might create .debs for some of the other packages like uboot etc. But then aga
 ### background
 It's no secret that the rootfs from [Alarm](https://archlinuxarm.org/platforms/armv7/samsung/samsung-chromebook-2) doesn't work with the Samsung Chromebook 2.  
 Well it's a bit of a secret as they've kept pumping out new rootfs's ever since the included kernels stopped working sometime between kernel 5.10 and 5.11 and the instructions on the above link make no mention of the non working kernel ? So semi secret.  
-It's likely they haven't realised yet as the [forum thread](https://archlinuxarm.org/forum/viewtopic.php?f=47&t=15169) about the non working kernels is only 5 pages long and easily missed ?   
-The usefulness of this repo is somewhat lessened due to the Arch Arm armv7 repo being a broken mix of old and new packages.
-
-I've switched to Devuan on my Chromebook.
-But if I release any new kernels they will likely still be Arch packages.
-
-I might create .debs for some of the other packages like uboot etc. But then again I might not.
-
-
+It's likely they haven't realised yet as the [forum thread](https://archlinuxarm.org/forum/viewtopic.php?f=47&t=15169) about the non working kernels is only 5 pages long and easily missed ?       
 
 It seems that whereas before the kernel would load when it had been compiled with multiple dtb's (devicetrees) it now refuses to do so.  
 A solution is to compile the kernel with only the peach pi specific dtb  
