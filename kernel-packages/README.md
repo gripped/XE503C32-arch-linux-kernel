@@ -15,4 +15,7 @@ Exynos5 Kernels
 [Exynos5 v6.6.87](https://gitlab.com/exynos5-mainline/linux/-/tree/v6.6.87-exynos5-lts?ref_type=tags)  
 [linux-armv7-v6.6.87](https://github.com/gripped/XE503C32-arch-kernel-packages/tree/master/exynos-6.6.87)  
 
+[Exynos5 v6.12.53](https://gitlab.com/exynos5-mainline/linux/-/tree/v6.12.53-exynos5-lts)  
+[linux-armv7-v6.12.53](https://github.com/gripped/XE503C32-arch-kernel-packages/tree/master/exynos5-6.12.53) (No kpart package)  
+
 Use an Exynos5 kernel if you want working Panfrost GPU drivers and what seems to be far better s5p-mfc video decoding.  
